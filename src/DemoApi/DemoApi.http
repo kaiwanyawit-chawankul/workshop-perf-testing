@@ -1,0 +1,17 @@
+@DemoApi_HostAddress = http://localhost:5000
+
+### Fast endpoint
+GET {{DemoApi_HostAddress}}/api/demo/fast
+Accept: application/json
+
+### Slow endpoint
+GET {{DemoApi_HostAddress}}/api/demo/slow
+Accept: application/json
+
+### Memory leak endpoint
+GET {{DemoApi_HostAddress}}/api/demo/leak
+Accept: application/json
+
+### CPU intensive endpoint
+GET {{DemoApi_HostAddress}}/api/demo/cpu
+Accept: application/json

@@ -1,0 +1,69 @@
+name: API Performance Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  perf-test:
+    runs-on: ubuntu-latest
+
+    services:
+      api:
+        image: mcr.microsoft.com/dotnet/aspnet:6.0
+        ports:
+          - 5000:5000
+        options: >-
+          --health-cmd "curl --fail http://localhost:5000/api/demo/fast || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/DemoApi/DemoApi.csproj
+
+      - name: Build API
+        run: dotnet build src/DemoApi/DemoApi.csproj --no-restore -c Release
+
+      - name: Run API in background
+        run: dotnet run --project src/DemoApi/DemoApi.csproj --urls http://0.0.0.0:5000 &
+
+      - name: Wait for API to start
+        run: |
+          for i in {1..10}; do
+            curl -s http://localhost:5000/api/demo/fast && break
+            echo "Waiting for API..."
+            sleep 5
+          done
+
+      - name: Install k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg software-properties-common
+          wget -q https://dl.k6.io/key.gpg -O- | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Run Load Test
+        run: k6 run tests/load-test.js
+
+      - name: Run Stress Test
+        run: k6 run tests/stress-test.js
+
+      - name: Run Soak Test (shortened for CI)
+        run: k6 run --duration 30s tests/soak-test.js
+
+      - name: Run Spike Test
+        run: k6 run tests/spike-test.js
