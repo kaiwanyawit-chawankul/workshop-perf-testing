@@ -76,3 +76,7 @@ See [workshop-exercises.md](workshop-exercises.md) for step-by-step practice:
 1. Detect memory usage in API
 1. Fix bottlenecks and re-test
 
+## 🚀 How to check
+
+See [how-to-check.md](how-to-check.md) for tools and steps.
+

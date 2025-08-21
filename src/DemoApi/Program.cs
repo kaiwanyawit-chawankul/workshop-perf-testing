@@ -61,4 +61,5 @@ app.MapPost(
 );
 IOBoundedEndpoints.Map(app, connectionString, redis);
 LoadTestEndpoints.Map(app);
+MemoryLeakEndpoints.Map(app);
 app.Run("http://0.0.0.0:5000");

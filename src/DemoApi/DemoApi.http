@@ -15,6 +15,14 @@ Accept: application/json
 GET {{DemoApi_HostAddress}}/api/demo/leak
 Accept: application/json
 
+### Memory leak endpoint
+GET {{DemoApi_HostAddress}}/api/demo/leak?mb=250
+Accept: application/json
+
+### Memory leak endpoint
+POST {{DemoApi_HostAddress}}/api/demo/leak/clear
+Accept: application/json
+
 ### CPU intensive endpoint
 GET {{DemoApi_HostAddress}}/api/demo/cpu
 Accept: application/json

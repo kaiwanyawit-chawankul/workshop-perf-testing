@@ -24,19 +24,6 @@ public static class LoadTestEndpoints
         );
 
         app.MapGet(
-            "/api/demo/leak",
-            () =>
-            {
-                // Simulate memory leak
-                var leak = new byte[10_000_000]; // 10 MB
-                memoryLeakList.Add(leak);
-                return Results.Ok(
-                    new { message = "Allocated memory chunk", count = memoryLeakList.Count }
-                );
-            }
-        );
-
-        app.MapGet(
             "/api/demo/cpu",
             () =>
             {
