@@ -1,7 +1,3 @@
-Perfect 👍 let’s add a **`workshop-exercises.md`** so your repo looks like a real hands-on training package.
-
----
-
 ### 📘 `workshop-exercises.md`
 
 ````markdown
@@ -13,7 +9,7 @@ This document contains **step-by-step exercises** you can follow to practice.
 ---
 
 ## 🏁 Prerequisites
-- .NET 6+ installed
+- .NET 9+ installed
 - [k6](https://k6.io/docs/get-started/installation/) installed
 - Demo API running:
   ```bash
@@ -118,14 +114,6 @@ CPU usage on your machine (htop or Task Manager).
 Whether requests slow down as CPU saturates.
 
 📌 **Goal:** Learn how CPU-bound tasks can affect throughput.
-
----
-## Bonus Challenges
-
-* Add a new endpoint `/cpu` that performs heavy calculations.
-* Write a k6 script to benchmark `/cpu` under load.
-* Add metrics dashboards (Prometheus + Grafana).
-* Automate performance tests in CI/CD pipeline (GitHub Actions).
 
 ---
 
