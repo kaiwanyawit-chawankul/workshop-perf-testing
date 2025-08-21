@@ -3,7 +3,7 @@ public static class IOBoundedEndpoints
 {
     public static void Map(WebApplication app, string connectionString)
     {
-        app.MapGet("/db-leak", async () =>
+        app.MapGet("api/demo/db-leak", async () =>
         {
             // BAD: Connection not disposed, pool leaks
             var conn = new NpgsqlConnection(connectionString);
@@ -18,7 +18,7 @@ public static class IOBoundedEndpoints
             return Results.Ok(result);
         });
 
-        app.MapGet("/db-ok", async () =>
+        app.MapGet("api/demo/db-ok", async () =>
         {
             await using var conn = new NpgsqlConnection(connectionString);
             await conn.OpenAsync();

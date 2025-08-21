@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
-
-
-
 // Get connection string from Aspire
 var connectionString = builder.Configuration.GetConnectionString("apidb");
 // Append pool size if not already present
@@ -31,14 +28,14 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-app.MapGet("/messages", async (DemoDbContext db) =>
+app.MapGet("api/demo/messages", async (DemoDbContext db) =>
 await db.Messages.ToListAsync());
 
-app.MapPost("/messages", async (DemoDbContext db, Message msg) =>
+app.MapPost("api/demo/messages", async (DemoDbContext db, Message msg) =>
 {
     db.Messages.Add(msg);
     await db.SaveChangesAsync();
-    return Results.Created($"/messages/{msg.Id}", msg);
+    return Results.Created($"api/demo/messages/{msg.Id}", msg);
 });
 IOBoundedEndpoints.Map(app, connectionString);
 LoadTestEndpoints.Map(app);

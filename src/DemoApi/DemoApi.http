@@ -17,11 +17,11 @@ GET {{DemoApi_HostAddress}}/api/demo/cpu
 Accept: application/json
 
 ### Get all messages (DB)
-GET http://localhost:5000/messages
+GET http://localhost:5000/api/demo/messages
 Accept: application/json
 
 ### Insert a new message (DB)
-POST http://localhost:5000/messages
+POST http://localhost:5000/api/demo/messages
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### This will eventually exhaust pool
-GET http://localhost:5000/db-leak
+GET http://localhost:5000/api/demo/db-leak
 
 ### Safe endpoint
-GET http://localhost:5000/db-ok
+GET http://localhost:5000/api/demo/db-ok
