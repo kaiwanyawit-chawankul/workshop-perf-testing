@@ -20,3 +20,9 @@ https://www.milanjovanovic.tech/blog/introduction-to-distributed-tracing-with-op
 
 
 https://stackoverflow.com/a/73264084/12294819
+
+https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel
+
+https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-otlp-example
+
+https://www.c-sharpcorner.com/article/observability-with-the-aspire-dashboard/

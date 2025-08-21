@@ -1,5 +1,8 @@
 @DemoApi_HostAddress = http://localhost:5000
 
+### Process id
+GET http://localhost:5000/api/demo/pid
+
 ### Fast endpoint
 GET {{DemoApi_HostAddress}}/api/demo/fast
 Accept: application/json

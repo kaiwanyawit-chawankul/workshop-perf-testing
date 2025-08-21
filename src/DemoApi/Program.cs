@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DemoApi;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -22,7 +23,9 @@ Console.WriteLine($"Using connection string: {connectionString}");
 IConnectionMultiplexer redis = await ConnectionMultiplexer.ConnectAsync($"{redisConnectionString}");
 
 builder.Services.AddSingleton(redis);
-builder.Services.AddStackExchangeRedisCache(options => options.ConnectionMultiplexerFactory = () => Task.FromResult(redis));
+builder.Services.AddStackExchangeRedisCache(options =>
+    options.ConnectionMultiplexerFactory = () => Task.FromResult(redis)
+);
 
 builder.Services.AddDbContext<DemoDbContext>(options => options.UseNpgsql(connectionString));
 
@@ -34,6 +37,16 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<DemoDbContext>();
     db.Database.Migrate(); // 👈 This line applies migrations at startup
 }
+
+// this is a demo API for testing purposes
+app.MapGet(
+    "api/demo/pid",
+    () =>
+    {
+        var pid = Process.GetCurrentProcess().Id;
+        return Results.Ok(new { pid });
+    }
+);
 
 app.MapGet("api/demo/messages", async (DemoDbContext db) => await db.Messages.ToListAsync());
 
