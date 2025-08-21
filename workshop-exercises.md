@@ -7,13 +7,12 @@ This document contains **step-by-step exercises** you can follow to practice.
 
 ## 🏁 Prerequisites
 
-* .NET 6+ installed
+* .NET 9.0 or higher installed
 * [k6](https://k6.io/docs/get-started/installation/) installed
 * Demo API running:
 
   ```bash
-  cd src/DemoApi
-  dotnet run
+   dotnet run --project ./src/DemoApi.AppHost/DemoApi.AppHost.csproj
   ```
 
 API is available at `http://localhost:5000/api/demo`
