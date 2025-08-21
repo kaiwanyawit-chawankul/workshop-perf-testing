@@ -9,9 +9,8 @@ var postgres = builder.AddPostgres("postgres");
 var databaseName = "apidb";
 
 var db = postgres.AddDatabase(databaseName);
+
 // Register API project and give it the DB connection string
-var api = builder.AddProject<Projects.DemoApi>("demoapi")
-    .WithReference(db)
-    .WaitFor(db);
+var api = builder.AddProject<Projects.DemoApi>("demoapi").WithReference(db).WaitFor(db);
 
 builder.Build().Run();

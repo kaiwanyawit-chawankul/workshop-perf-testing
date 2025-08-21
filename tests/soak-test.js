@@ -1,12 +1,12 @@
-import http from 'k6/http';
-import { sleep } from 'k6';
+import http from "k6/http";
+import { check } from "k6";
 
 export let options = {
-    vus: 10,
-    duration: '10m',
+  duration: "10m",
+  vus: 10,
 };
 
 export default function () {
-    http.get('http://localhost:5000/api/demo/fast');
-    sleep(1);
+  const res = http.get("http://localhost:5000/api/demo/fast");
+  check(res, { "status 200": (r) => r.status === 200 });
 }

@@ -1,32 +1,67 @@
 using Npgsql;
+
+namespace DemoApi;
+
 public static class IOBoundedEndpoints
 {
     public static void Map(WebApplication app, string connectionString)
     {
-        app.MapGet("api/demo/db-leak", async () =>
-        {
-            // BAD: Connection not disposed, pool leaks
-            var conn = new NpgsqlConnection(connectionString);
-            await conn.OpenAsync();
+        // ❌ BAD: Connection not disposed, pool leaks over time
+        app.MapGet(
+            "api/demo/db-leak",
+            async () =>
+            {
+                var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
 
-            // Simulate a long-running query
-            await Task.Delay(5000);
+                // Simulate a short delay while still leaking connection
+                await Task.Delay(2000);
 
-            using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
-            var result = await cmd.ExecuteScalarAsync();
+                using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
+                var result = await cmd.ExecuteScalarAsync();
 
-            return Results.Ok(result);
-        });
+                return Results.Ok(result);
+            }
+        );
 
-        app.MapGet("api/demo/db-ok", async () =>
-        {
-            await using var conn = new NpgsqlConnection(connectionString);
-            await conn.OpenAsync();
+        // ❌ BAD: Static/global connection, shared across requests
+        app.MapGet(
+            "api/demo/db-static",
+            async () =>
+            {
+                // WARNING: Using static connection is unsafe in multithreaded apps
+                return Results.Ok(await StaticConnection.GetNow(connectionString));
+            }
+        );
 
-            using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
-            var result = await cmd.ExecuteScalarAsync();
+        // ✅ GOOD: Properly opens and disposes per request
+        app.MapGet(
+            "api/demo/db-ok",
+            async () =>
+            {
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
 
-            return Results.Ok(result);
-        });
+                using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
+                var result = await cmd.ExecuteScalarAsync();
+
+                return Results.Ok(result);
+            }
+        );
+    }
+}
+
+public static class StaticConnection
+{
+    private static NpgsqlConnection? _conn;
+
+    public static async Task<object?> GetNow(string connectionString)
+    {
+        _conn ??= new NpgsqlConnection(connectionString);
+        if (_conn.State != System.Data.ConnectionState.Open)
+            await _conn.OpenAsync();
+
+        using var cmd = new NpgsqlCommand("SELECT NOW()", _conn);
+        return await cmd.ExecuteScalarAsync();
     }
 }

@@ -31,5 +31,8 @@ Content-Type: application/json
 ### This will eventually exhaust pool
 GET http://localhost:5000/api/demo/db-leak
 
+### Static endpoint that leaks DB connections
+GET http://localhost:5000/api/demo/db-static
+
 ### Safe endpoint
 GET http://localhost:5000/api/demo/db-ok
