@@ -27,3 +27,9 @@ Content-Type: application/json
 {
   "text": "Hello from .http file"
 }
+
+### This will eventually exhaust pool
+GET http://localhost:5000/db-leak
+
+### Safe endpoint
+GET http://localhost:5000/db-ok

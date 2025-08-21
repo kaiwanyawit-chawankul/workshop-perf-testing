@@ -1,10 +1,3 @@
-Perfect 👍 let’s add a **`workshop-exercises.md`** so your repo looks like a real hands-on training package.
-
----
-
-### 📘 `workshop-exercises.md`
-
-````markdown
 # Workshop Exercises: API Performance Testing
 
 Welcome to the **API Performance Testing Workshop**!
@@ -13,13 +6,15 @@ This document contains **step-by-step exercises** you can follow to practice.
 ---
 
 ## 🏁 Prerequisites
-- .NET 6+ installed
-- [k6](https://k6.io/docs/get-started/installation/) installed
-- Demo API running:
+
+* .NET 6+ installed
+* [k6](https://k6.io/docs/get-started/installation/) installed
+* Demo API running:
+
   ```bash
   cd src/DemoApi
   dotnet run
-````
+  ```
 
 API is available at `http://localhost:5000/api/demo`
 
@@ -105,27 +100,54 @@ API is available at `http://localhost:5000/api/demo`
 ---
 
 ## Exercise 6: CPU Test
+
 1. Run a load test against `/cpu`:
 
    ```bash
    k6 run tests/load-test.js
    ```
-(Update the URL in the script to /cpu)
+
+   (Update the URL in the script to `/cpu`)
+
 2. Observe:
 
-CPU usage on your machine (htop or Task Manager).
-
-Whether requests slow down as CPU saturates.
+   * CPU usage on your machine (`htop` or Task Manager).
+   * Whether requests slow down as CPU saturates.
 
 📌 **Goal:** Learn how CPU-bound tasks can affect throughput.
 
 ---
-## Bonus Challenges
 
-* Add a new endpoint `/cpu` that performs heavy calculations.
-* Write a k6 script to benchmark `/cpu` under load.
-* Add metrics dashboards (Prometheus + Grafana).
-* Automate performance tests in CI/CD pipeline (GitHub Actions).
+## Exercise 7: Database Connection Pool Exhaustion
+
+1. Configure a **low max pool size** in your connection string, e.g.:
+
+   ```json
+   "ConnectionStrings": {
+     "apidb": "Host=localhost;Port=5432;Database=apidb;Username=postgres;Password=postgres;Maximum Pool Size=10"
+   }
+   ```
+
+2. Run a load test against the **bad endpoint** `/db-leak`:
+
+   ```bash
+   k6 run tests/load-test.js
+   ```
+
+3. Observe:
+
+   * Errors like
+
+     ```
+     TimeoutException: The connection pool has been exhausted
+     ```
+   * Requests failing once all connections are stuck.
+
+4. Compare with the **good endpoint** `/db-ok`.
+
+   * It should stay healthy under the same load.
+
+📌 **Goal:** Learn how poor DB design (not disposing connections) leads to pool exhaustion.
 
 ---
 
@@ -133,6 +155,5 @@ Whether requests slow down as CPU saturates.
 
 * Simulate **real-world traffic patterns**
 * Detect performance bottlenecks
-* Debug issues like **latency spikes** and **memory leaks**
+* Debug issues like **latency spikes**, **memory leaks**, and **DB pool exhaustion**
 * Improve API resilience under load
-

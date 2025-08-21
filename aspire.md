@@ -2,6 +2,8 @@ https://learn.microsoft.com/en-us/dotnet/aspire/get-started/add-aspire-existing-
 
 https://learn.microsoft.com/en-us/dotnet/aspire/database/postgresql-integration?tabs=dotnet-cli
 
+https://learn.microsoft.com/en-us/dotnet/aspire/fundamentals/external-parameters
+
 dotnet new aspire-apphost -o DemoApi.AppHost
 dotnet new aspire-servicedefaults -o DemoApi.ServiceDefaults
 

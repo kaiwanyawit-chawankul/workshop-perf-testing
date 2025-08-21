@@ -9,6 +9,12 @@ builder.AddServiceDefaults();
 
 // Get connection string from Aspire
 var connectionString = builder.Configuration.GetConnectionString("apidb");
+// Append pool size if not already present
+if (!connectionString.Contains("Maximum Pool Size"))
+{
+    connectionString += ";Maximum Pool Size=10";
+}
+
 Console.WriteLine($"Using connection string: {connectionString}");
 
 builder.Services.AddDbContext<DemoDbContext>(options =>
@@ -34,6 +40,6 @@ app.MapPost("/messages", async (DemoDbContext db, Message msg) =>
     await db.SaveChangesAsync();
     return Results.Created($"/messages/{msg.Id}", msg);
 });
-
+IOBoundedEndpoints.Map(app, connectionString);
 LoadTestEndpoints.Map(app);
 app.Run("http://0.0.0.0:5000");
