@@ -16,6 +16,6 @@ dotnet add DemoApi/DemoApi.csproj reference DemoApi.ServiceDefaults/DemoApi.Serv
 
 https://learn.microsoft.com/en-us/dotnet/aspire/caching/stackexchange-redis-integration?tabs=dotnet-cli&pivots=redis
 
-
+https://www.milanjovanovic.tech/blog/introduction-to-distributed-tracing-with-opentelemetry-in-dotnet
 
 

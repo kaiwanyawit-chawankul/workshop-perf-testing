@@ -5,7 +5,7 @@ namespace DemoApi;
 
 public static class IOBoundedEndpoints
 {
-    public static void Map(WebApplication app, string connectionString, ConnectionMultiplexer redis)
+    public static void Map(WebApplication app, string connectionString, IConnectionMultiplexer redis)
     {
         // ❌ BAD: Connection not disposed, pool leaks over time
         app.MapGet(

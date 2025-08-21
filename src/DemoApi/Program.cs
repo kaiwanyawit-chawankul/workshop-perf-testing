@@ -19,7 +19,10 @@ if (!connectionString.Contains("Maximum Pool Size"))
 Console.WriteLine($"Using connection string: {connectionString}");
 
 // Add Redis
-var redis = ConnectionMultiplexer.Connect($"{redisConnectionString}");
+IConnectionMultiplexer redis = await ConnectionMultiplexer.ConnectAsync($"{redisConnectionString}");
+
+builder.Services.AddSingleton(redis);
+builder.Services.AddStackExchangeRedisCache(options => options.ConnectionMultiplexerFactory = () => Task.FromResult(redis));
 
 builder.Services.AddDbContext<DemoDbContext>(options => options.UseNpgsql(connectionString));
 
