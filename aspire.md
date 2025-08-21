@@ -19,3 +19,4 @@ https://learn.microsoft.com/en-us/dotnet/aspire/caching/stackexchange-redis-inte
 https://www.milanjovanovic.tech/blog/introduction-to-distributed-tracing-with-opentelemetry-in-dotnet
 
 
+https://stackoverflow.com/a/73264084/12294819
