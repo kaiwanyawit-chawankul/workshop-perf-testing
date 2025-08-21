@@ -1,10 +1,11 @@
 using Npgsql;
+using StackExchange.Redis;
 
 namespace DemoApi;
 
 public static class IOBoundedEndpoints
 {
-    public static void Map(WebApplication app, string connectionString)
+    public static void Map(WebApplication app, string connectionString, ConnectionMultiplexer redis)
     {
         // ❌ BAD: Connection not disposed, pool leaks over time
         app.MapGet(
@@ -46,6 +47,46 @@ public static class IOBoundedEndpoints
                 var result = await cmd.ExecuteScalarAsync();
 
                 return Results.Ok(result);
+            }
+        );
+
+        var cache = redis.GetDatabase();
+
+        // 🐢 Slow DB query
+        app.MapGet(
+            "api/demo/db-slow",
+            async () =>
+            {
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+                await Task.Delay(3000);
+                using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
+                var result = await cmd.ExecuteScalarAsync();
+                return Results.Ok(new { Source = "DB", Value = result });
+            }
+        );
+
+        // ⚡ Cached DB query
+        app.MapGet(
+            "api/demo/db-cached",
+            async () =>
+            {
+                var cacheKey = "now-value";
+                var cached = await cache.StringGetAsync(cacheKey);
+                if (cached.HasValue)
+                {
+                    return Results.Ok(new { Source = "Cache", Value = cached.ToString() });
+                }
+
+                await using var conn = new NpgsqlConnection(connectionString);
+                await conn.OpenAsync();
+                await Task.Delay(3000);
+                using var cmd = new NpgsqlCommand("SELECT NOW()", conn);
+                var result = (await cmd.ExecuteScalarAsync())?.ToString();
+
+                await cache.StringSetAsync(cacheKey, result, TimeSpan.FromSeconds(10));
+
+                return Results.Ok(new { Source = "DB", Value = result });
             }
         );
     }

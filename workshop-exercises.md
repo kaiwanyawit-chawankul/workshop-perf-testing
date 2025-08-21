@@ -198,6 +198,20 @@ k6 run tests/db-pool-test.js
 
 ---
 
+## Exercise 8: Redis Caching vs Slow DB
+
+1. Call `/db-slow`:
+   - Every request takes ~3 seconds (simulates a slow query).
+2. Call `/db-cached`:
+   - First request is slow (~3s).
+   - Subsequent requests are instant (served from Redis).
+3. Run a k6 load test against both endpoints:
+   ```bash
+   k6 run tests/load-test.js
+   # Update URL inside script to /db-slow and /db-cached
+
+---
+
 ✅ **Key takeaway:**
 
 * `/db-leak` → pool exhaustion from not disposing connections
