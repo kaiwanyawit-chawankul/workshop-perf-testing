@@ -15,3 +15,15 @@ Accept: application/json
 ### CPU intensive endpoint
 GET {{DemoApi_HostAddress}}/api/demo/cpu
 Accept: application/json
+
+### Get all messages (DB)
+GET http://localhost:5000/messages
+Accept: application/json
+
+### Insert a new message (DB)
+POST http://localhost:5000/messages
+Content-Type: application/json
+
+{
+  "text": "Hello from .http file"
+}

@@ -1,5 +1,7 @@
 https://learn.microsoft.com/en-us/dotnet/aspire/get-started/add-aspire-existing-app?tabs=unix&pivots=vscode
 
+https://learn.microsoft.com/en-us/dotnet/aspire/database/postgresql-integration?tabs=dotnet-cli
+
 dotnet new aspire-apphost -o DemoApi.AppHost
 dotnet new aspire-servicedefaults -o DemoApi.ServiceDefaults
 
